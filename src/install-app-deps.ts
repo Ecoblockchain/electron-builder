@@ -11,6 +11,8 @@ import { readPackageJson } from "./util/readPackageJson"
 const args: any = yargs
   .option("arch", {
     choices: ["ia32", "x64", "all"],
+  }).option("platform", {
+    choices: ["linux", "darwin", "win32"],
   }).argv
 
 const projectDir = process.cwd()
@@ -27,7 +29,7 @@ async function main() {
     throw new Error("install-app-deps is only useful for two package.json structure")
   }
 
-  await installDependencies(results[0], results[1], args.arch, devMetadata.build.npmSkipBuildFromSource !== true)
+  await installDependencies(results[0], results[1], args.platform, args.arch, devMetadata.build.npmSkipBuildFromSource !== true)
 }
 
 main()

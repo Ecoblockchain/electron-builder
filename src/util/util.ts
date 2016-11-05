@@ -16,17 +16,18 @@ export const debug7z: Debugger = _debug("electron-builder:7z")
 
 const DEFAULT_APP_DIR_NAMES = ["app", "www"]
 
-export function installDependencies(appDir: string, electronVersion: string, arch: string = process.arch, forceBuildFromSource: boolean, command: string = "install", additionalArgs?: any): Promise<any> {
-  return task(`${(command === "install" ? "Installing" : "Rebuilding")} app dependencies for arch ${arch} to ${appDir}`, spawnNpmProduction(command, appDir, forceBuildFromSource, getGypEnv(electronVersion, arch), additionalArgs))
+export function installDependencies(appDir: string, electronVersion: string, platform: string, arch: string = process.arch, forceBuildFromSource: boolean, command: string = "install", additionalArgs?: any): Promise<any> {
+  return task(`${(command === "install" ? "Installing" : "Rebuilding")} app dependencies for platform ${platform} ${arch} to ${appDir}`, spawnNpmProduction(command, appDir, forceBuildFromSource, getGypEnv(electronVersion, platform, arch), additionalArgs))
 }
 
-export function getGypEnv(electronVersion: string, arch: string): any {
+export function getGypEnv(electronVersion: string, platform: string, arch: string): any {
   const gypHome = path.join(homedir(), ".electron-gyp")
   return Object.assign({}, process.env, {
     npm_config_disturl: "https://atom.io/download/electron",
     npm_config_target: electronVersion,
     npm_config_runtime: "electron",
     npm_config_arch: arch,
+    npm_config_platform: platform,
     HOME: gypHome,
     USERPROFILE: gypHome,
   })
